@@ -1,3 +1,6 @@
+// ROFL.cpp : Defines the entry point for the console application.
+//
+
 #include "stdafx.h"
 #include <cmath>
 #include <list>
@@ -5,9 +8,9 @@
 #include <set>
 
 
-const int NEURONS = 2000;
+const int NEURONS = 1000;
 const int DIMENSIONS = 2;
-const int EXPAMPLES = 1500;
+const int EXPAMPLES = 2000;
 const double INITSIGMA = 1;
 
 class ROFL {
@@ -135,6 +138,31 @@ public:
 		return closestNeuron;
 	}
 
+	std::list<int> FindOverlappingNeurons(int selectedNeuron)
+	{
+		std::list<int> overlappingNeurons;
+		double radiusSelectedNeuron = p * Sigmas[selectedNeuron];
+
+		for (int neuron = 0; neuron < NumberNeurons; neuron++)
+		{
+			if (neuron != selectedNeuron)
+			{
+				double radius = p * Sigmas[neuron];
+				double tempSum = 0;
+				for (int dimension = 0; dimension < CountDimensions; dimension++)
+				{
+					tempSum += pow(Centers[selectedNeuron][dimension] - Centers[neuron][dimension], 2);
+				}
+				if (sqrt(tempSum) <= radius + radiusSelectedNeuron)
+				{
+					overlappingNeurons.push_back(neuron);
+				}
+			}
+		}
+
+		return overlappingNeurons;
+	}
+
 	void Train(double trainingExamples[EXPAMPLES][DIMENSIONS], int numberExamples)
 	{
 
@@ -172,7 +200,8 @@ public:
 	void GnuPlot()
 	{
 		std::ofstream file("centers.dat", std::ofstream::out | std::ofstream::trunc);
-		if (file.is_open()) {
+		std::ofstream fileNeighbours("Neighbours.dat", std::ofstream::out | std::ofstream::trunc);
+		if (file.is_open() && fileNeighbours.is_open()) {
 			for (int neuron = 0; neuron < NumberNeurons; neuron++)
 			{
 				double radius = p * Sigmas[neuron];
@@ -185,13 +214,28 @@ public:
 				file << radius;
 
 				file << "\n";
+
+				std::list<int> overlappingNeurons = FindOverlappingNeurons(neuron);
+				for (int overlappingNeuron : overlappingNeurons)
+				{
+					for (int dimension = 0; dimension < CountDimensions; dimension++)
+					{
+						fileNeighbours << Centers[neuron][dimension] << " ";
+					}
+					for (int dimension = 0; dimension < CountDimensions; dimension++)
+					{
+						fileNeighbours << Centers[overlappingNeuron][dimension] - Centers[neuron][dimension] << " ";
+					}
+					fileNeighbours << "\n";
+				}
 			}
 		}
 		file.close();
+		fileNeighbours.close();
 
 		std::ofstream filePlot("plotROFL.gnuplot", std::ofstream::out | std::ofstream::trunc);
 		if (filePlot.is_open()) {
-			filePlot << "set title \"ROFL\"" << "\n" << "plot \"centers.dat\"  using 1:2:3 with circles  title \"ROFL\", \\" << "\n" << "\"random_train.dat\" using 1:2 with points title \"input\"" ;
+			filePlot << "set title \"ROFL\"" << "\n" << "plot \"centers.dat\"  using 1:2:3 with circles  title \"ROFL\", \\" << "\n" << "\"Neighbours.dat\"  using 1:2:3:4 with vectors, \\" << "\n" << "\"random_train.dat\" using 1:2 with points title \"input\"" ;
 		}
 		filePlot.close();
 	}
