@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include "Eigen/Core"
-#include "ROFL2.cpp"
+#include "ROLF2.cpp"
 
 using namespace std;
 namespace helper {
@@ -76,11 +76,16 @@ M load_csv (const std::string& path, char del = ',') {
     return Eigen::Map<const Eigen::Matrix<typename M::Scalar, M::RowsAtCompileTime, M::ColsAtCompileTime, Eigen::RowMajor>>(values.data(), rows, values.size() / rows);
 }
 
-void testROFL2()
+void testROLF()
 {
-    ROFL roflNetwork(2, 2000);
+    ROLF roflNetwork(2, 2000);
 
-	double traininExamples[1500][2];
+	double** traininExamples;
+	traininExamples = new double*[EXPAMPLES];
+	for (int i = 0; i < EXPAMPLES; i++)
+	{
+		traininExamples[i] = new double[DIMENSIONS];
+	}
 
 	std::ifstream roflFile("random_train.dat");
 	std::string line;
@@ -104,6 +109,7 @@ void testROFL2()
 
 int main()
 {
+    testROLF();
     return 0;
 }
 
