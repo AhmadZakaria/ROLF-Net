@@ -10,7 +10,7 @@ make
 
 To run the program, simply call the executable.
 ```sh
-./TNN-D
+./TNN-E
 ```
 
 ## Plotting the results
