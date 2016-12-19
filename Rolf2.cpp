@@ -10,7 +10,7 @@ const int DIMENSIONS = 10;
 const int EXPAMPLES = 100000;
 const double INITSIGMA = 1;
 
-class ROFL {
+class ROLF {
 private:
 	int CountDimensions;
 	int CountNeurons;
@@ -23,7 +23,7 @@ private:
 	double ** TrainingExamples;
 
 public:
-	explicit ROFL(int countDimensions, int countNeurons) {
+	explicit ROLF(int countDimensions, int countNeurons) {
 		CountDimensions = countDimensions;
 		CountNeurons = countNeurons;
 		
@@ -242,9 +242,9 @@ public:
 		file.close();
 		/*fileNeighbours.close();*/
 
-		std::ofstream filePlot("plotROFL.gnuplot", std::ofstream::out | std::ofstream::trunc);
+		std::ofstream filePlot("plotROLF.gnuplot", std::ofstream::out | std::ofstream::trunc);
 		if (filePlot.is_open()) {
-			filePlot << "set title \"ROFL\"" << "\n" << "plot \"centers.dat\"  using 1:2:3 with circles  title \"ROFL\", \\" << "\n" /*<< "\"Neighbours.dat\"  using 1:2:3:4 with vectors, \\" << "\n" <<*/ "\"random_train.dat\" using 1:2 with points title \"input\"" ;
+			filePlot << "set title \"ROLF\"" << "\n" << "plot \"centers.dat\"  using 1:2:3 with circles  title \"ROLF\", \\" << "\n" /*<< "\"Neighbours.dat\"  using 1:2:3:4 with vectors, \\" << "\n" <<*/ "\"random_train.dat\" using 1:2 with points title \"input\"" ;
 		}
 		filePlot.close();
 	}
