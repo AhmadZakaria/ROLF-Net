@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include "Eigen/Core"
-#include "ROLF2.cpp"
+#include "rolf2.cpp"
 
 using namespace std;
 namespace helper {
